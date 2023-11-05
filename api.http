@@ -1,0 +1,37 @@
+
+#게시판 글 전체 가져오기
+GET {{localUrl}}/board 
+
+###
+
+#게시판 글 id로 가져오기
+GET {{localUrl}}/board/5
+
+###
+
+#게시판 글 생성
+POST {{localUrl}}/board
+Content-Type: application/json
+
+{
+    "name": "lee",
+    "title": "lee",
+    "contents": "constent lee"
+}
+
+
+###
+
+#게시판 글 수정
+PUT {{localUrl}}/board/4
+Content-Type: application/json
+
+{
+    "name": "lee put",
+    "contest": "constent lee"
+}
+
+###
+
+#게시판 글 삭제
+DELETE  {{localUrl}}/board/4
