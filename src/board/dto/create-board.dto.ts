@@ -1,24 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import {IsNotEmpty, IsNumber, MaxLength, MinLength} from 'class-validator';
 
 export class CreateBoardDto {
-    @IsNotEmpty()
-    @MinLength(2)
-    @MaxLength(20)
+    @IsNumber()
     @ApiProperty({
-        description: '이름',
+        description: '작성자 아이디',
         required: true,
-        example: 'leecoder',
+        example: '1',
     })
-    name: string;
-
-    @IsNotEmpty()
-    @ApiProperty({
-        description: '제목',
-        required: true,
-        example: 'leecoder-title',
-    })
-    title: string;
+    userId: number;
 
     @ApiProperty({
         description: '내용',
