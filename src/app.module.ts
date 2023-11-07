@@ -1,11 +1,12 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BoardModule } from './board/board.module';
+import { BoardModule } from './routes/board/board.module';
 import { LoggingMiddleware } from './middlewares/logging.middleware';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {ConfigModule} from "@nestjs/config";
 import {typeOrmModuleOptions} from "./config/typeorm.config";
+import { UserModule } from './routes/user/user.module';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import {typeOrmModuleOptions} from "./config/typeorm.config";
         ),
         TypeOrmModule.forRoot(typeOrmModuleOptions),
         BoardModule,
+        UserModule,
         ],
     controllers: [AppController],
     providers: [AppService],

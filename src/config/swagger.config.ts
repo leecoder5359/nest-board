@@ -1,5 +1,5 @@
-import {INestApplication} from "@nestjs/common";
-import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
+import { INestApplication } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export const SwaggerConfig = (app: INestApplication) => {
     const swaggerConfig = new DocumentBuilder()
@@ -7,7 +7,8 @@ export const SwaggerConfig = (app: INestApplication) => {
         .setDescription('Board API description')
         .setVersion('1.0')
         .addTag('Board')
+        .addTag('User')
         .build();
     const document = SwaggerModule.createDocument(app, swaggerConfig);
     SwaggerModule.setup('api', app, document);
-}
+};

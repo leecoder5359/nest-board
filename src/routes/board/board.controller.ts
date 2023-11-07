@@ -1,4 +1,4 @@
-import {BoardService} from './board.service';
+import { BoardService } from './board.service';
 import {
     Body,
     Controller,
@@ -13,16 +13,17 @@ import {
     Put,
     ValidationPipe,
 } from '@nestjs/common';
-import {CreateBoardDto} from './dto/create-board.dto';
-import {UpdateBoardDto} from './dto/update-board.dto';
-import {Ip} from 'src/decorators/ip.decorator';
+import { CreateBoardDto } from './dto/create-board.dto';
+import { UpdateBoardDto } from './dto/update-board.dto';
+import { Ip } from 'src/decorators/ip.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('board')
+@ApiTags('Board')
 export class BoardController {
     private readonly logger = new Logger();
 
-    constructor(private readonly boardService: BoardService) {
-    }
+    constructor(private readonly boardService: BoardService) {}
 
     @Get()
     findAll(@Ip() ip: string) {
@@ -46,10 +47,7 @@ export class BoardController {
     }
 
     @Put(':id')
-    update(
-        @Param('id', ParseIntPipe) id: number,
-        @Body() data: UpdateBoardDto
-    ) {
+    update(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateBoardDto) {
         return this.boardService.update(id, data);
     }
 
