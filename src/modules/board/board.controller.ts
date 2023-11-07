@@ -11,13 +11,12 @@ import {
     ParseIntPipe,
     Post,
     Put,
-    UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { Ip } from 'src/decorators/ip.decorator';
 import { ApiTags } from '@nestjs/swagger';
-import { GetUser, GetUserId } from '../../decorators/user-info.decorator';
+import { GetUserId } from '../../decorators/user-info.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('board')
@@ -50,12 +49,18 @@ export class BoardController {
     }
 
     @Put(':id')
-    update(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateBoardDto) {
-        return this.boardService.update(id, data);
+    @UseGuards(JwtAuthGuard)
+    update(
+        @GetUserId() userId: number,
+        @Param('id', ParseIntPipe) id: number,
+        @Body() data: UpdateBoardDto,
+    ) {
+        return this.boardService.update(userId, id, data);
     }
 
     @Delete(':id')
-    remove(@Param('id', ParseIntPipe) id: number) {
-        return this.boardService.remove(id);
+    @UseGuards(JwtAuthGuard)
+    remove(@GetUserId() userId: number, @Param('id', ParseIntPipe) id: number) {
+        return this.boardService.remove(userId, id);
     }
 }

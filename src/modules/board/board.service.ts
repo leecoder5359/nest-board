@@ -1,16 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../../entities/user.entity';
 import { Board } from '../../entities/board.entity';
-import {UpdateBoardDto} from "./dto/update-board.dto";
+import { UpdateBoardDto } from './dto/update-board.dto';
 
 @Injectable()
 export class BoardService {
     constructor(
-        @InjectRepository(User)
-        private userRepository: Repository<User>,
         @InjectRepository(Board)
         private boardRepository: Repository<Board>,
     ) {}
@@ -20,7 +17,14 @@ export class BoardService {
     }
 
     async findById(id: number) {
-        const board = await this.getBoardById(id);
+        const board = await this.boardRepository.findOne({
+            where: {
+                id,
+            },
+            relations: {
+                user: true,
+            },
+        });
 
         if (!board) throw new HttpException('NotFound', HttpStatus.NOT_FOUND);
 
@@ -31,23 +35,31 @@ export class BoardService {
         return this.boardRepository.save(createBoardDto);
     }
 
-    async update(id: number, updateBoardDto: UpdateBoardDto) {
+    async update(userId: number, id: number, updateBoardDto: UpdateBoardDto) {
         const board = await this.getBoardById(id);
 
         if (!board) throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
 
-        return this.boardRepository.update(id, {...updateBoardDto});
+        await this.validUserForBoard(userId, board.userId);
+
+        return this.boardRepository.update(id, { ...updateBoardDto });
     }
 
-    async remove(id: number) {
+    async remove(userId: number, id: number) {
         const board = await this.getBoardById(id);
 
         if (!board) throw new HttpException('NOT_FOUND', HttpStatus.NOT_FOUND);
+
+        await this.validUserForBoard(userId, board.userId);
 
         await this.boardRepository.remove(board);
     }
 
     private async getBoardById(id: number) {
-        return this.boardRepository.findOneBy({id});
+        return this.boardRepository.findOneBy({ id });
+    }
+
+    private async validUserForBoard(userId: number, boardUserId: number) {
+        if (userId !== boardUserId) throw new UnauthorizedException();
     }
 }
