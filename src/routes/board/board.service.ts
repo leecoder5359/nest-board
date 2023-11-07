@@ -2,8 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../entities/user.entity';
-import { Board } from '../entities/board.entity';
+import { User } from '../../entities/user.entity';
+import { Board } from '../../entities/board.entity';
 import {UpdateBoardDto} from "./dto/update-board.dto";
 
 @Injectable()
