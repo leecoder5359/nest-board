@@ -83,4 +83,20 @@ describe('AuthService', () => {
             expect(result).toBeNull();
         });
     });
+
+    describe('로그인 accessToken 발급', () => {
+        const email = 'test@example.com';
+        const password = 'password';
+
+        it('성공시', async () => {
+            const accessToken = 'fakeAccessToken';
+            const expectedUser = await getExpectedUser(email, password);
+
+            mockJwtService.sign.mockReturnValue(accessToken);
+
+            const result = await authService.login(expectedUser);
+
+            expect(result).toEqual({ accessToken });
+        });
+    });
 });
